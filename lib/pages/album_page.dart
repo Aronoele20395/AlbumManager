@@ -3,7 +3,7 @@ import 'package:album_manager/models/photo.dart';
 import 'package:album_manager/models/user.dart';
 import 'package:album_manager/utils/album_provider.dart';
 import 'package:album_manager/utils/network_manager.dart';
-import 'package:album_manager/utils/user_provider.dart';
+import 'package:album_manager/utils/utils.dart';
 import 'package:album_manager/widgets/photo_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/platform/platform.dart';
@@ -18,7 +18,6 @@ class AlbumPage extends StatelessWidget {
     bool isDesktop = GetPlatform.isDesktop;
 
     final selectedAlbumProvider = Provider.of<AlbumProvider>(context);
-    final selectedUserProvider = Provider.of<UserProvider>(context);
     final Album? selectedAlbum = selectedAlbumProvider.selectedAlbum;
     int? userId = selectedAlbum?.userId;
 
@@ -44,10 +43,9 @@ class AlbumPage extends StatelessWidget {
                       return const Center(child: Text("Errore"));
                     } else {
                       return TextButton(
-                          onPressed: () {
-                            selectedUserProvider.setSelectedUser(snapshot.data!);
-                            context.pushNamed('user_page');
-                          },
+                          onPressed: isDesktop
+                              ? () {Utils.showUserDialog(context, snapshot.data!, false);}
+                              : () {context.pushNamed("user_page");},
                           child: Text(snapshot.data!.name));
                     }
                   }),

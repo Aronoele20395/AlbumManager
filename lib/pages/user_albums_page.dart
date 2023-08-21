@@ -3,6 +3,7 @@ import 'package:album_manager/utils/network_manager.dart';
 import 'package:album_manager/utils/user_provider.dart';
 import 'package:album_manager/widgets/album_card.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 
 class UserAlbums extends StatelessWidget {
@@ -10,6 +11,8 @@ class UserAlbums extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDesktop = GetPlatform.isDesktop;
+
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.selectedUser;
 
@@ -34,8 +37,8 @@ class UserAlbums extends StatelessWidget {
                   },
                   childCount: snapshot.data!.length,
                 ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isDesktop ? 6 : 2,
                   mainAxisSpacing: 15,
                   crossAxisSpacing: 15,
                   childAspectRatio: 2.0,

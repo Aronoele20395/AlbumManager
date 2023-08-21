@@ -8,7 +8,7 @@ class Utils {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: const Text("Attenzione"),
-        content: Text("Sei sicuro di voler eliminare $element"),
+        content: Text("Sei sicuro di voler eliminare $element?"),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'Cancel'),

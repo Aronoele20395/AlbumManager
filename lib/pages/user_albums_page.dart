@@ -17,36 +17,41 @@ class UserAlbums extends StatelessWidget {
     final user = userProvider.selectedUser;
 
     return Scaffold(
-      appBar: AppBar(),
-      body: FutureBuilder<List<Album>>(
-        future: NetworkManager().getAlbumsByUser(user!.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text("Errore nel caricamento degli album"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("Nessun album disponibile"));
-          } else {
-            return CustomScrollView(slivers: [
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final album = snapshot.data![index];
-                    return AlbumCard(album);
-                  },
-                  childCount: snapshot.data!.length,
+      appBar: AppBar(
+        title: Text("Album di ${user!.name}", overflow: TextOverflow.ellipsis,)
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FutureBuilder<List<Album>>(
+          future: NetworkManager().getAlbumsByUser(user.id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(child: Text("Errore nel caricamento degli album"));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text("Nessun album disponibile"));
+            } else {
+              return CustomScrollView(slivers: [
+                SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final album = snapshot.data![index];
+                      return AlbumCard(album);
+                    },
+                    childCount: snapshot.data!.length,
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: isDesktop ? 6 : 2,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 2.0,
+                  ),
                 ),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isDesktop ? 6 : 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  childAspectRatio: 2.0,
-                ),
-              ),
-            ]);
-          }
-        },
+              ]);
+            }
+          },
+        ),
       ),
     );
   }

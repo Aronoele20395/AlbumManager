@@ -3,6 +3,7 @@ import 'package:album_manager/models/photo.dart';
 import 'package:album_manager/models/user.dart';
 import 'package:album_manager/utils/album_provider.dart';
 import 'package:album_manager/utils/network_manager.dart';
+import 'package:album_manager/utils/user_provider.dart';
 import 'package:album_manager/utils/utils.dart';
 import 'package:album_manager/widgets/photo_card.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class AlbumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDesktop = GetPlatform.isDesktop;
+
+    final userProvider = Provider.of<UserProvider>(context);
 
     final selectedAlbumProvider = Provider.of<AlbumProvider>(context);
     final Album? selectedAlbum = selectedAlbumProvider.selectedAlbum;
@@ -44,8 +47,14 @@ class AlbumPage extends StatelessWidget {
                     } else {
                       return TextButton(
                           onPressed: isDesktop
-                              ? () {Utils.showUserDialog(context, snapshot.data!, false);}
-                              : () {context.pushNamed("user_page");},
+                              ? () {
+                                  Utils.showUserDialog(context, snapshot.data!, false);
+                                }
+                              : () async {
+                                  User selectedUser = await NetworkManager().getUserById(userId);
+                                  userProvider.setSelectedUser(selectedUser);
+                                  context.pushNamed("user_page");
+                                },
                           child: Text(snapshot.data!.name));
                     }
                   }),

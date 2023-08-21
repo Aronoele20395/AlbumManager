@@ -8,7 +8,7 @@ class Utils {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: const Text("Attenzione"),
-        content: Text("Sei sicuro di voler eliminare " + element),
+        content: Text("Sei sicuro di voler eliminare $element"),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'Cancel'),
@@ -46,7 +46,7 @@ class Utils {
           showAlbums ? TextButton(
             onPressed: () => context.pushNamed('user_albums_page'),
             child: const Text('I miei album'),
-          ) : SizedBox(),
+          ) : const SizedBox(),
         ],
       ),
     );
